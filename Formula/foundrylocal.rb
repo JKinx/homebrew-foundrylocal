@@ -6,12 +6,17 @@ class Foundrylocal < Formula
 
 
   def install
-    bin.install "bin/foundry"
-    bin.install "bin/Inference.Service.Agent"
+    libexec.install "bin/foundry"
+    libexec.install "bin/libonnxruntime-genai.dylib"
+    libexec.install "bin/libonnxruntime.dylib"
+    libexec.install "bin/Inference.Service.Agent"
+    libexec.install "bin/appsettings.json"
 
-    bin.install "bin/libonnxruntime-genai.dylib"
-    bin.install "bin/libonnxruntime.dylib"
-    
-    bin.install "bin/appsettings.json"
+    (bin/"foundry").write <<~EOS
+      #!/bin/bash
+      exec "#{libexec}/foundry" "$@"
+    EOS
+
+    chmod 0755, bin/"foundry"
   end
 end
